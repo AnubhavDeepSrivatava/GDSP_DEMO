@@ -1,2 +1,2 @@
 import './styles/global.css'
-import './app/employee-app.ts'
+import './components/employee-manager/employee-manager.ts'
