@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import type { Employee } from './employee.types.ts'
+import type { Employee } from '../../types/employee.types.ts'
 
 @customElement('employee-list')
 export class EmployeeList extends LitElement {

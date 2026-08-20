@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
-import type { Employee } from './employee.types.ts'
+import type { Employee } from '../../types/employee.types.ts'
+import { generateId } from '../../utils/id.ts'
 
 @customElement('employee-form')
 export class EmployeeForm extends LitElement {
@@ -29,7 +30,7 @@ export class EmployeeForm extends LitElement {
     if (!this._name.trim() || !this._email.trim()) return
 
     const detail: Employee = {
-      id: this.employee?.id ?? crypto.randomUUID(),
+      id: this.employee?.id ?? generateId(),
       name: this._name.trim(),
       department: this._department.trim(),
       designation: this._designation.trim(),

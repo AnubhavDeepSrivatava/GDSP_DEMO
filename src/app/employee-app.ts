@@ -1,8 +1,8 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import './components/employee-form.ts'
-import './components/employee-list.ts'
-import type { Employee } from './components/employee.types.ts'
+import '../components/employee-form/employee-form.ts'
+import '../components/employee-list/employee-list.ts'
+import type { Employee } from '../types/employee.types.ts'
 
 @customElement('employee-app')
 export class EmployeeApp extends LitElement {
