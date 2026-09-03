@@ -7,12 +7,17 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:widget": "tsc --noEmit && vite build --config vite.widget.config.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "mocha"
   },
   "dependencies": {
     "lit": "^3.3.3"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "chai": "^6.2.2",
+    "mocha": "^12.0.0",
+    "tsx": "^4.23.13",
     "typescript": "~6.0.2",
     "vite": "^8.2.0"
   }
