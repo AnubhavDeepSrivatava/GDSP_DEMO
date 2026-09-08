@@ -1,5 +1,6 @@
 import { LitElement, html, type PropertyValues, type TemplateResult } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
+import { successToastDurationMs } from '../shared/toast.templates.ts'
 import type { Employee } from '../../types/employee.types.ts'
 import { getInputElementValue } from '../../utils/dom.ts'
 import { generateId } from '../../utils/id.ts'
@@ -7,7 +8,6 @@ import { isValidEmailFormat } from '../../utils/validation.ts'
 import { employeeFormStyles } from './employee-form.styles.ts'
 import { renderEmployeeFormView } from './employee-form.templates.ts'
 
-const successToastDurationMs = 3000
 const logPrefix = '[employee-form]'
 
 /**

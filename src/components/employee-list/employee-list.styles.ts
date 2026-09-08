@@ -1,5 +1,6 @@
 import { css } from 'lit'
 import { brandTheme } from '../../styles/brand-theme.ts'
+import { toastStyles } from '../../styles/toast.styles.ts'
 
 // Same theming pattern as employee-form: every color and font size is a
 // CSS custom property with a fallback baked into the var() call, and the
@@ -15,6 +16,10 @@ const employeeListComponentStyles = css`
     width: 100%;
     font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     color: var(--brand-color-text, #111827);
+  }
+
+  .employee-list-layout {
+    position: relative;
   }
 
   .employee-list-card {
@@ -108,6 +113,64 @@ const employeeListComponentStyles = css`
   .delete-button:hover {
     background: var(--brand-color-danger-background-hover, #fecaca);
   }
+
+  .delete-confirm-message {
+    font-size: var(--brand-font-size-small, 13px);
+    color: var(--brand-color-text, #111827);
+  }
+
+  .confirm-delete-button {
+    background: var(--brand-color-danger, #b91c1c);
+    color: var(--brand-color-surface, #ffffff);
+  }
+
+  .confirm-delete-button:hover {
+    background: var(--brand-color-danger-background-hover, #fecaca);
+    color: var(--brand-color-danger, #b91c1c);
+  }
+
+  .cancel-delete-button {
+    background: var(--brand-color-neutral, #e5e7eb);
+    color: var(--brand-color-text, #111827);
+  }
+
+  .cancel-delete-button:hover {
+    background: var(--brand-color-neutral-hover, #d1d5db);
+  }
+
+  .pagination-controls {
+    margin-top: var(--brand-spacing-medium, 16px);
+    padding-top: var(--brand-spacing-medium, 16px);
+    border-top: 1px solid var(--brand-color-border, #e5e4e7);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--brand-spacing-medium, 16px);
+  }
+
+  .pagination-status {
+    font-size: var(--brand-font-size-small, 13px);
+    color: var(--brand-color-text-muted, #6b6375);
+  }
+
+  .pagination-button {
+    background: var(--brand-color-neutral, #e5e7eb);
+    color: var(--brand-color-text, #111827);
+  }
+
+  .pagination-button:hover:not(:disabled) {
+    background: var(--brand-color-neutral-hover, #d1d5db);
+  }
+
+  .pagination-button:disabled {
+    color: var(--brand-color-text-subtle, #9ca3af);
+    cursor: not-allowed;
+  }
 `
 
-export const employeeListStyles = [brandTheme, employeeListComponentStyles]
+export const employeeListStyles = [
+  brandTheme,
+  toastStyles,
+  employeeListComponentStyles,
+]

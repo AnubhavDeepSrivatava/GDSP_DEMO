@@ -9,6 +9,7 @@ import './components/employee-form/employee-form.ts'
 import './components/employee-list/employee-list.ts'
 import type { Employee } from './types/employee.types.ts'
 import { getCustomEventDetail } from './utils/dom.ts'
+import { loadStoredEmployees, saveStoredEmployees } from './utils/employeeStorage.ts'
 
 const logPrefix = '[main]'
 
@@ -25,11 +26,18 @@ function getRequiredElement<TagName extends keyof HTMLElementTagNameMap>(
 const employeeFormElement = getRequiredElement('employee-form')
 const employeeListElement = getRequiredElement('employee-list')
 
-let employees: Employee[] = []
+// Restore whatever was saved from a previous visit, so a page reload
+// doesn't wipe out the employee list.
+let employees: Employee[] = loadStoredEmployees()
 
 function updateEmployeeListElement(): void {
   employeeListElement.employees = employees
+  saveStoredEmployees(employees)
 }
+
+// Render whatever was loaded from storage immediately, without waiting
+// for a save/edit/delete event to trigger the first render.
+updateEmployeeListElement()
 
 employeeFormElement.addEventListener('save-employee', (event: Event): void => {
   const employeeToSave = getCustomEventDetail<Employee>(event)

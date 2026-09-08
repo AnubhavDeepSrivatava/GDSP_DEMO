@@ -4,6 +4,7 @@
 // and changed without touching the state/event-handling logic.
 import { html, nothing, type TemplateResult } from 'lit'
 import { classMap } from 'lit/directives/class-map.js'
+import { renderSuccessToast } from '../shared/toast.templates.ts'
 import { isValidEmailFormat } from '../../utils/validation.ts'
 
 export interface EmployeeFormViewModel {
@@ -27,15 +28,6 @@ function renderFieldHint(isInvalid: boolean, message: string): TemplateResult {
   >
     ${message}
   </span>`
-}
-
-function renderSuccessToast(message: string): TemplateResult {
-  return html`
-    <div class="success-toast" role="status" aria-live="polite">
-      <span class="success-toast-icon" aria-hidden="true">✓</span>
-      <span>${message}</span>
-    </div>
-  `
 }
 
 // A plain if/else chain instead of a nested ternary — the coding guideline

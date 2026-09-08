@@ -1,5 +1,6 @@
 import { css } from 'lit'
 import { brandTheme } from '../../styles/brand-theme.ts'
+import { toastStyles } from '../../styles/toast.styles.ts'
 
 // Every color and font size is a CSS custom property with a fallback value
 // baked into each var() call, e.g. var(--brand-color-primary, #2563eb).
@@ -34,40 +35,6 @@ const employeeFormComponentStyles = css`
     margin: 0 0 var(--brand-spacing-medium, 16px);
     font-size: var(--brand-font-size-heading, 20px);
     color: var(--brand-color-text, #111827);
-  }
-
-  .success-toast {
-    position: absolute;
-    top: var(--brand-spacing-medium, 16px);
-    right: var(--brand-spacing-medium, 16px);
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: var(--brand-spacing-extra-small, 6px);
-    padding: var(--brand-spacing-small, 10px) var(--brand-spacing-medium, 16px);
-    background: var(--brand-color-success-background, #dcfce7);
-    color: var(--brand-color-success, #15803d);
-    border: 1px solid var(--brand-color-success-border, #86efac);
-    border-radius: var(--brand-radius-small, 6px);
-    font-size: var(--brand-font-size-small, 13px);
-    box-shadow: 0 8px 20px rgba(17, 24, 39, 0.12);
-    animation: employee-form-toast-in 0.2s ease-out;
-  }
-
-  .success-toast-icon {
-    font-size: var(--brand-font-size-body, 14px);
-    line-height: 1;
-  }
-
-  @keyframes employee-form-toast-in {
-    from {
-      opacity: 0;
-      transform: translateY(-6px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   .form-error-message {
@@ -166,4 +133,8 @@ const employeeFormComponentStyles = css`
   }
 `
 
-export const employeeFormStyles = [brandTheme, employeeFormComponentStyles]
+export const employeeFormStyles = [
+  brandTheme,
+  toastStyles,
+  employeeFormComponentStyles,
+]
