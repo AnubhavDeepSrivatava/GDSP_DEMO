@@ -2,7 +2,7 @@
 // returns a template, with no access to component state or `this`. Keeping
 // them here (separate from employee-form.ts) means the markup can be read
 // and changed without touching the state/event-handling logic.
-import { html, type TemplateResult } from 'lit'
+import { html, nothing, type TemplateResult } from 'lit'
 import { classMap } from 'lit/directives/class-map.js'
 import { isValidEmailFormat } from '../../utils/validation.ts'
 
@@ -38,6 +38,22 @@ function renderSuccessToast(message: string): TemplateResult {
   `
 }
 
+// A plain if/else chain instead of a nested ternary — the coding guideline
+// explicitly calls out nested ternaries as something to avoid, since they
+// read left-to-right but branch in a different order than they display.
+function getEmailHintMessage(
+  isEmailFieldInvalid: boolean,
+  isEmailFormatInvalid: boolean,
+): string {
+  if (!isEmailFieldInvalid) {
+    return 'e.g. name@example.com'
+  }
+  if (isEmailFormatInvalid) {
+    return 'Enter a valid email address, e.g. name@example.com'
+  }
+  return 'Email is required'
+}
+
 export function renderEmployeeFormView(
   viewModel: EmployeeFormViewModel,
 ): TemplateResult {
@@ -60,24 +76,23 @@ export function renderEmployeeFormView(
   const nameHintMessage = isNameFieldInvalid
     ? 'Name is required'
     : "Employee's full name"
-  const emailHintMessage = isEmailFieldInvalid
-    ? isEmailFormatInvalid
-      ? 'Enter a valid email address, e.g. name@example.com'
-      : 'Email is required'
-    : 'e.g. name@example.com'
+  const emailHintMessage = getEmailHintMessage(
+    isEmailFieldInvalid,
+    isEmailFormatInvalid,
+  )
 
   return html`
     <div class="employee-form-layout">
       ${viewModel.successMessage
         ? renderSuccessToast(viewModel.successMessage)
-        : ''}
+        : nothing}
       <section class="employee-form-card">
         <h2 class="section-heading">Employee Form</h2>
         ${viewModel.errorMessage
           ? html`<p class="form-error-message" role="alert">
               ${viewModel.errorMessage}
             </p>`
-          : ''}
+          : nothing}
         <div class="employee-form-fields">
           <label class="employee-form-field">
             <span>Name <span class="required-marker">*</span></span>

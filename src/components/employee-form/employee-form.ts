@@ -1,13 +1,14 @@
-import { LitElement, html } from 'lit'
+import { LitElement, html, type PropertyValues, type TemplateResult } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import type { Employee } from '../../types/employee.types.ts'
+import { getInputElementValue } from '../../utils/dom.ts'
 import { generateId } from '../../utils/id.ts'
 import { isValidEmailFormat } from '../../utils/validation.ts'
 import { employeeFormStyles } from './employee-form.styles.ts'
 import { renderEmployeeFormView } from './employee-form.templates.ts'
 
-const SUCCESS_TOAST_DURATION_MS = 3000
-const LOG_PREFIX = '[employee-form]'
+const successToastDurationMs = 3000
+const logPrefix = '[employee-form]'
 
 /**
  * Standalone form component. It owns nothing about the employee list —
@@ -23,43 +24,43 @@ export class EmployeeForm extends LitElement {
   employee: Employee | null = null
 
   @state()
-  private _employeeNameInput = ''
+  private employeeNameInput = ''
   @state()
-  private _employeeDepartmentInput = ''
+  private employeeDepartmentInput = ''
   @state()
-  private _employeeDesignationInput = ''
+  private employeeDesignationInput = ''
   @state()
-  private _employeeEmailInput = ''
+  private employeeEmailInput = ''
   @state()
-  private _formErrorMessage = ''
+  private formErrorMessage = ''
   @state()
-  private _successToastMessage: string | null = null
+  private successToastMessage: string | null = null
 
-  private _successToastTimeoutId: ReturnType<typeof setTimeout> | null = null
+  private successToastTimeoutId: ReturnType<typeof setTimeout> | null = null
 
-  willUpdate(changedProperties: Map<string, unknown>) {
+  willUpdate(changedProperties: PropertyValues<this>): void {
     if (changedProperties.has('employee')) {
-      this._employeeNameInput = this.employee?.name ?? ''
-      this._employeeDepartmentInput = this.employee?.department ?? ''
-      this._employeeDesignationInput = this.employee?.designation ?? ''
-      this._employeeEmailInput = this.employee?.email ?? ''
-      this._formErrorMessage = ''
+      this.employeeNameInput = this.employee?.name ?? ''
+      this.employeeDepartmentInput = this.employee?.department ?? ''
+      this.employeeDesignationInput = this.employee?.designation ?? ''
+      this.employeeEmailInput = this.employee?.email ?? ''
+      this.formErrorMessage = ''
     }
   }
 
-  private _handleSaveButtonClick = () => {
+  private handleSaveButtonClick = (): void => {
     // Required-field check runs first so "Name and Email are required" wins
     // over a format complaint when both are actually missing.
-    if (!this._employeeNameInput.trim() || !this._employeeEmailInput.trim()) {
-      this._formErrorMessage = 'Name and Email are required.'
-      console.warn(`${LOG_PREFIX} save blocked: missing required field(s)`)
+    if (!this.employeeNameInput.trim() || !this.employeeEmailInput.trim()) {
+      this.formErrorMessage = 'Name and Email are required.'
+      console.warn(`${logPrefix} save blocked: missing required field(s)`)
       return
     }
 
-    if (!isValidEmailFormat(this._employeeEmailInput)) {
-      this._formErrorMessage = 'Enter a valid email address.'
-      console.warn(`${LOG_PREFIX} save blocked: invalid email format`, {
-        email: this._employeeEmailInput,
+    if (!isValidEmailFormat(this.employeeEmailInput)) {
+      this.formErrorMessage = 'Enter a valid email address.'
+      console.warn(`${logPrefix} save blocked: invalid email format`, {
+        email: this.employeeEmailInput,
       })
       return
     }
@@ -68,14 +69,14 @@ export class EmployeeForm extends LitElement {
 
     const employeeToSave: Employee = {
       id: this.employee?.id ?? generateId(),
-      name: this._employeeNameInput.trim(),
-      department: this._employeeDepartmentInput.trim(),
-      designation: this._employeeDesignationInput.trim(),
-      email: this._employeeEmailInput.trim(),
+      name: this.employeeNameInput.trim(),
+      department: this.employeeDepartmentInput.trim(),
+      designation: this.employeeDesignationInput.trim(),
+      email: this.employeeEmailInput.trim(),
     }
 
     console.log(
-      `${LOG_PREFIX} ${isUpdatingExistingEmployee ? 'updated' : 'added'} employee`,
+      `${logPrefix} ${isUpdatingExistingEmployee ? 'updated' : 'added'} employee`,
       employeeToSave,
     )
 
@@ -87,82 +88,82 @@ export class EmployeeForm extends LitElement {
       }),
     )
 
-    this._resetFormFields()
-    this._showSuccessToast(
+    this.resetFormFields()
+    this.showSuccessToast(
       isUpdatingExistingEmployee
         ? 'Employee updated successfully'
         : 'Employee added successfully',
     )
   }
 
-  private _resetFormFields() {
+  private resetFormFields(): void {
     this.employee = null
-    this._employeeNameInput = ''
-    this._employeeDepartmentInput = ''
-    this._employeeDesignationInput = ''
-    this._employeeEmailInput = ''
-    this._formErrorMessage = ''
+    this.employeeNameInput = ''
+    this.employeeDepartmentInput = ''
+    this.employeeDesignationInput = ''
+    this.employeeEmailInput = ''
+    this.formErrorMessage = ''
   }
 
-  private _handleClearButtonClick = () => {
-    this._resetFormFields()
+  private handleClearButtonClick = (): void => {
+    this.resetFormFields()
   }
 
-  private _showSuccessToast(message: string) {
-    this._successToastMessage = message
+  private showSuccessToast(message: string): void {
+    this.successToastMessage = message
     // Clear any timer from a previous toast so a fast second save doesn't
     // get its toast cut short by the first one's timeout firing early.
-    if (this._successToastTimeoutId !== null) {
-      clearTimeout(this._successToastTimeoutId)
+    if (this.successToastTimeoutId !== null) {
+      clearTimeout(this.successToastTimeoutId)
     }
-    this._successToastTimeoutId = setTimeout(() => {
-      this._successToastMessage = null
-      this._successToastTimeoutId = null
-    }, SUCCESS_TOAST_DURATION_MS)
+    this.successToastTimeoutId = setTimeout(() => {
+      this.successToastMessage = null
+      this.successToastTimeoutId = null
+    }, successToastDurationMs)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback(): void {
     super.disconnectedCallback()
     // Without this, a pending toast timeout fires after the element is gone
     // and writes to a @state property nothing is listening to any more.
-    if (this._successToastTimeoutId !== null) {
-      clearTimeout(this._successToastTimeoutId)
+    if (this.successToastTimeoutId !== null) {
+      clearTimeout(this.successToastTimeoutId)
     }
   }
 
-  private _handleNameInput = (event: Event) => {
-    this._employeeNameInput = (event.target as HTMLInputElement).value
-    this._formErrorMessage = ''
+  private handleNameInput = (event: Event): void => {
+    this.employeeNameInput = getInputElementValue(event)
+    this.formErrorMessage = ''
   }
 
-  private _handleDepartmentInput = (event: Event) => {
-    this._employeeDepartmentInput = (event.target as HTMLInputElement).value
+  private handleDepartmentInput = (event: Event): void => {
+    this.employeeDepartmentInput = getInputElementValue(event)
   }
 
-  private _handleDesignationInput = (event: Event) => {
-    this._employeeDesignationInput = (event.target as HTMLInputElement).value
+  private handleDesignationInput = (event: Event): void => {
+    this.employeeDesignationInput = getInputElementValue(event)
   }
 
-  private _handleEmailInput = (event: Event) => {
-    this._employeeEmailInput = (event.target as HTMLInputElement).value
-    this._formErrorMessage = ''
+  private handleEmailInput = (event: Event): void => {
+    this.employeeEmailInput = getInputElementValue(event)
+    this.formErrorMessage = ''
   }
 
-  render() {
+  render(): TemplateResult {
     return html`
       ${renderEmployeeFormView({
-        nameValue: this._employeeNameInput,
-        departmentValue: this._employeeDepartmentInput,
-        designationValue: this._employeeDesignationInput,
-        emailValue: this._employeeEmailInput,
-        errorMessage: this._formErrorMessage,
-        successMessage: this._successToastMessage,
-        onNameInput: this._handleNameInput,
-        onDepartmentInput: this._handleDepartmentInput,
-        onDesignationInput: this._handleDesignationInput,
-        onEmailInput: this._handleEmailInput,
-        onSaveButtonClick: this._handleSaveButtonClick,
-        onClearButtonClick: this._handleClearButtonClick,
+        nameValue: this.employeeNameInput,
+        departmentValue: this.employeeDepartmentInput,
+        designationValue: this.employeeDesignationInput,
+        emailValue: this.employeeEmailInput,
+        errorMessage: this.formErrorMessage,
+        successMessage: this.successToastMessage,
+        onNameInput: this.handleNameInput,
+        onDepartmentInput: this.handleDepartmentInput,
+        onDesignationInput: this.handleDesignationInput,
+        onEmailInput: this.handleEmailInput,
+        onSaveButtonClick: this.handleSaveButtonClick,
+        onClearButtonClick: this.handleClearButtonClick,
       })}
     `
   }

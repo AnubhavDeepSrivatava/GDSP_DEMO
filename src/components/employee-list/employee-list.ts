@@ -1,10 +1,10 @@
-import { LitElement, html } from 'lit'
+import { LitElement, html, type TemplateResult } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import type { Employee } from '../../types/employee.types.ts'
 import { employeeListStyles } from './employee-list.styles.ts'
 import { renderEmployeeListView } from './employee-list.templates.ts'
 
-const LOG_PREFIX = '[employee-list]'
+const logPrefix = '[employee-list]'
 
 /**
  * Standalone list component. It owns nothing about the form — a parent
@@ -19,8 +19,8 @@ export class EmployeeList extends LitElement {
   @property({ type: Array })
   employees: Employee[] = []
 
-  private _handleEditButtonClick = (employee: Employee) => {
-    console.log(`${LOG_PREFIX} editing employee`, employee)
+  private handleEditButtonClick = (employee: Employee): void => {
+    console.log(`${logPrefix} editing employee`, employee)
     this.dispatchEvent(
       new CustomEvent<Employee>('edit-employee', {
         detail: employee,
@@ -30,8 +30,8 @@ export class EmployeeList extends LitElement {
     )
   }
 
-  private _handleDeleteButtonClick = (employeeId: string) => {
-    console.log(`${LOG_PREFIX} deleting employee`, { id: employeeId })
+  private handleDeleteButtonClick = (employeeId: string): void => {
+    console.log(`${logPrefix} deleting employee`, { id: employeeId })
     this.dispatchEvent(
       new CustomEvent<string>('delete-employee', {
         detail: employeeId,
@@ -41,12 +41,12 @@ export class EmployeeList extends LitElement {
     )
   }
 
-  render() {
+  render(): TemplateResult {
     return html`
       ${renderEmployeeListView({
         employees: this.employees,
-        onEditButtonClick: this._handleEditButtonClick,
-        onDeleteButtonClick: this._handleDeleteButtonClick,
+        onEditButtonClick: this.handleEditButtonClick,
+        onDeleteButtonClick: this.handleDeleteButtonClick,
       })}
     `
   }
