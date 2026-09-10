@@ -30,7 +30,8 @@ export function renderEmployeeListView(
         <h3 class="section-heading">Employee List</h3>
         ${viewModel.employees.length === 0
           ? html`<p class="empty-state-message">No employees yet</p>`
-          : html`<div class="employee-list" role="list">
+          : html`<div class="employee-table" role="table">
+              ${renderEmployeeTableHeader()}
               ${viewModel.employees.map((employee) =>
                 renderEmployeeRow(employee, viewModel),
               )}
@@ -72,6 +73,18 @@ function renderPaginationControls(
   `
 }
 
+function renderEmployeeTableHeader(): TemplateResult {
+  return html`
+    <div class="employee-table-header" role="row">
+      <span role="columnheader">Name</span>
+      <span role="columnheader">Department</span>
+      <span role="columnheader">Designation</span>
+      <span role="columnheader">Email</span>
+      <span role="columnheader">Actions</span>
+    </div>
+  `
+}
+
 function renderEmployeeRow(
   employee: Employee,
   viewModel: EmployeeListViewModel,
@@ -80,28 +93,20 @@ function renderEmployeeRow(
     viewModel.pendingDeleteEmployeeId === employee.id
 
   return html`
-    <div class="employee-row" role="listitem">
-      <div class="employee-cell">
-        <span class="employee-cell-label">Name</span>
-        <span class="employee-cell-value">${employee.name}</span>
-      </div>
-      <div class="employee-cell">
-        <span class="employee-cell-label">Department</span>
-        <span class="employee-cell-value">${employee.department}</span>
-      </div>
-      <div class="employee-cell">
-        <span class="employee-cell-label">Designation</span>
-        <span class="employee-cell-value">${employee.designation}</span>
-      </div>
-      <div class="employee-cell">
-        <span class="employee-cell-label">Email</span>
-        <span class="employee-cell-value">${employee.email}</span>
-      </div>
-      <div class="employee-cell employee-cell-actions">
+    <div class="employee-row" role="row">
+      <span class="employee-cell-value" role="cell">${employee.name}</span>
+      <span class="employee-cell-value" role="cell"
+        >${employee.department}</span
+      >
+      <span class="employee-cell-value" role="cell"
+        >${employee.designation}</span
+      >
+      <span class="employee-cell-value" role="cell">${employee.email}</span>
+      <span class="employee-cell-actions" role="cell">
         ${isConfirmingDeleteForThisRow
           ? renderDeleteConfirmation(employee, viewModel)
           : renderRowActionButtons(employee, viewModel)}
-      </div>
+      </span>
     </div>
   `
 }

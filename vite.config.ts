@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 
-// Builds the dev app (index.html + main.ts). For the standalone embeddable
-// widget bundle, see vite.widget.config.ts / `npm run build:widget` instead.
+// Builds the dev app (index.html + the app-shell component). For the
+// standalone embeddable widget bundle, see vite.widget.config.ts /
+// `npm run build:widget` instead.
 export default defineConfig({
   server: {
     // PORT is set by external tooling that assigns this dev server a

@@ -42,49 +42,48 @@ const employeeListComponentStyles = css`
     margin: 0;
   }
 
-  .employee-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--brand-spacing-extra-small, 6px);
+  /* Horizontal scroll is the escape hatch on a narrow host instead of a
+     media-query breakpoint — the same way a real table would behave, since
+     this is deliberately shaped like one (one header row, columns stay
+     aligned down every data row) via CSS Grid rather than a <table> tag. */
+  .employee-table {
+    overflow-x: auto;
   }
 
-  /* Each row wraps its own cells with flexbox — on a narrow host, cells
-     drop to new lines instead of the row needing a media-query breakpoint. */
+  .employee-table-header,
   .employee-row {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns:
+      minmax(120px, 1.4fr) minmax(100px, 1fr) minmax(120px, 1.2fr)
+      minmax(160px, 1.6fr) minmax(140px, auto);
     align-items: center;
     gap: var(--brand-spacing-medium, 16px);
     padding: var(--brand-spacing-small, 10px) 0;
     border-bottom: 1px solid var(--brand-color-border, #e5e4e7);
   }
 
-  .employee-cell {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex: 1 1 140px;
-    min-width: 120px;
-    font-size: var(--brand-font-size-body, 14px);
-  }
-
-  .employee-cell-label {
+  .employee-table-header {
     font-size: var(--brand-font-size-caption, 11px);
     text-transform: uppercase;
     letter-spacing: 0.3px;
     color: var(--brand-color-text-subtle, #9ca3af);
   }
 
+  .employee-row {
+    font-size: var(--brand-font-size-body, 14px);
+  }
+
   .employee-cell-value {
     color: var(--brand-color-text, #111827);
+    overflow-wrap: anywhere;
   }
 
   .employee-cell-actions {
-    flex: 0 0 auto;
-    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--brand-spacing-extra-small, 6px);
-    margin-left: auto;
   }
 
   button {

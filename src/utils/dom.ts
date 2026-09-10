@@ -23,3 +23,19 @@ export function getCustomEventDetail<DetailType>(event: Event): DetailType {
   }
   return event.detail as DetailType
 }
+
+// Finds a specific slotted/light-DOM child by tag name, failing loudly if
+// it's missing instead of quietly returning null and breaking later at an
+// unrelated line — e.g. app-shell expects <employee-form> and
+// <employee-list> to always be present among its own children.
+export function getRequiredChildElement<
+  TagName extends keyof HTMLElementTagNameMap,
+>(parentElement: Element, tagName: TagName): HTMLElementTagNameMap[TagName] {
+  const element = parentElement.querySelector(tagName)
+  if (element === null) {
+    throw new Error(
+      `getRequiredChildElement: expected a <${tagName}> element inside <${parentElement.tagName.toLowerCase()}>`,
+    )
+  }
+  return element
+}

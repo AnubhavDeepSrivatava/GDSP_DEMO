@@ -8,8 +8,8 @@ import { css } from 'lit'
 // reuse them, per "Theme Variable Naming".
 export const brandTheme = css`
   :host {
-    --brand-color-primary: #2563eb;
-    --brand-color-primary-hover: #1d4ed8;
+    --brand-color-primary: #7c3aed;
+    --brand-color-primary-hover: #6d28d9;
     --brand-color-danger: #b91c1c;
     --brand-color-danger-background: #fee2e2;
     --brand-color-danger-background-hover: #fecaca;
@@ -26,6 +26,13 @@ export const brandTheme = css`
     --brand-color-surface: #ffffff;
     --brand-color-neutral: #e5e7eb;
     --brand-color-neutral-hover: #d1d5db;
+
+    /* The banner's gradient end color — the start intentionally matches
+       --brand-color-primary above, so the banner and the buttons read as
+       one consistent accent, fading to pink for extra flair on the
+       banner specifically. */
+    --brand-color-accent-gradient-start: #7c3aed;
+    --brand-color-accent-gradient-end: #db2777;
 
     --brand-spacing-extra-small: 6px;
     --brand-spacing-small: 10px;

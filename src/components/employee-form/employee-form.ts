@@ -14,7 +14,8 @@ const logPrefix = '[employee-form]'
  * Standalone form component. It owns nothing about the employee list —
  * a parent page sets `.employee` to prefill it for editing, and listens
  * for the `save-employee` event to actually persist the result. See
- * main.ts for how it's wired up to <employee-list>.
+ * the <app-shell> component (app-shell.ts) for how it's wired up to
+ * <employee-list>.
  */
 @customElement('employee-form')
 export class EmployeeForm extends LitElement {

@@ -17,7 +17,8 @@ const rowsPerPage = 5
  * Standalone list component. It owns nothing about the form — a parent
  * page sets `.employees` to show data, and listens for `edit-employee`
  * and `delete-employee` events to react to the buttons in each row. See
- * main.ts for how it's wired up to <employee-form>.
+ * the <app-shell> component (app-shell.ts) for how it's wired up to
+ * <employee-form>.
  *
  * Pagination and delete-confirmation are both display concerns of this
  * component alone: the parent always hands over the full list and only
