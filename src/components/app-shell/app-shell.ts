@@ -1,35 +1,16 @@
 import { LitElement, css, html, type TemplateResult } from 'lit'
 import { customElement } from 'lit/decorators.js'
-import '../employee-form/employee-form.ts'
-import '../employee-list/employee-list.ts'
+import '../employee-widget/employee-widget.ts'
 import { brandTheme } from '../../styles/brand-theme.ts'
-import type { Employee } from '../../types/employee.types.ts'
-import type { EmployeeForm } from '../employee-form/employee-form.ts'
-import type { EmployeeList } from '../employee-list/employee-list.ts'
-import {
-  getCustomEventDetail,
-  getRequiredChildElement,
-} from '../../utils/dom.ts'
-import {
-  loadStoredEmployees,
-  saveStoredEmployees,
-} from '../../utils/employeeStorage.ts'
-
-const logPrefix = '[app-shell]'
 
 /**
- * The shell: a real custom element that receives <employee-form> and
- * <employee-list> as slotted (light-DOM) children, and connects them by
- * listening for their bubbled, composed custom events
- * (save-employee / edit-employee / delete-employee). Neither widget knows
- * this element exists — they only fire events and accept data through
- * their own properties, exactly as before.
+ * The shell: page-level chrome only — a banner and a layout container.
+ * All the employee-specific interaction logic lives in <employee-widget>
+ * (see employee-widget.ts), not here. This component doesn't know how
+ * <employee-form> and <employee-list> talk to each other, and doesn't
+ * need to — it just renders the one widget tag.
  *
- * Usage:
- *   <app-shell>
- *     <employee-form></employee-form>
- *     <employee-list></employee-list>
- *   </app-shell>
+ * Usage: <app-shell></app-shell> — no children needed.
  *
  * Deliberately does NOT import styles/global.css: this component ships
  * inside the standalone widget bundle (widget-entry.ts), so anything it
@@ -81,91 +62,13 @@ const appShellComponentStyles = css`
 export class AppShell extends LitElement {
   static styles = [brandTheme, appShellComponentStyles]
 
-  // Plain field, not @state() — app-shell's own render() never reads this
-  // (it only renders a <slot>); the data flows out to <employee-list>'s
-  // own `.employees` property instead, so there's nothing here for Lit's
-  // reactivity to re-render.
-  private employees: Employee[] = loadStoredEmployees()
-
-  private employeeFormElement!: EmployeeForm
-  private employeeListElement!: EmployeeList
-
-  connectedCallback(): void {
-    super.connectedCallback()
-
-    this.employeeFormElement = getRequiredChildElement(this, 'employee-form')
-    this.employeeListElement = getRequiredChildElement(this, 'employee-list')
-
-    this.addEventListener('save-employee', this.handleSaveEmployee)
-    this.addEventListener('edit-employee', this.handleEditEmployee)
-    this.addEventListener('delete-employee', this.handleDeleteEmployee)
-
-    // Render whatever was loaded from storage immediately, without
-    // waiting for a save/edit/delete event to trigger the first render.
-    this.updateEmployeeListElement()
-  }
-
-  disconnectedCallback(): void {
-    super.disconnectedCallback()
-    this.removeEventListener('save-employee', this.handleSaveEmployee)
-    this.removeEventListener('edit-employee', this.handleEditEmployee)
-    this.removeEventListener('delete-employee', this.handleDeleteEmployee)
-  }
-
-  private updateEmployeeListElement(): void {
-    this.employeeListElement.employees = this.employees
-    saveStoredEmployees(this.employees)
-  }
-
-  private handleSaveEmployee = (event: Event): void => {
-    const employeeToSave = getCustomEventDetail<Employee>(event)
-    const existingEmployeeIndex = this.employees.findIndex(
-      (employee) => employee.id === employeeToSave.id,
-    )
-
-    // A brand-new employee goes to the front, so the most recently added
-    // entry is the first thing visible. An edit keeps its existing
-    // position instead of jumping to the top just because a field changed.
-    this.employees =
-      existingEmployeeIndex >= 0
-        ? [
-            ...this.employees.slice(0, existingEmployeeIndex),
-            employeeToSave,
-            ...this.employees.slice(existingEmployeeIndex + 1),
-          ]
-        : [employeeToSave, ...this.employees]
-
-    console.log(`${logPrefix} employee list is now`, this.employees)
-    this.updateEmployeeListElement()
-  }
-
-  private handleEditEmployee = (event: Event): void => {
-    const employeeToEdit = getCustomEventDetail<Employee>(event)
-    this.employeeFormElement.employee = employeeToEdit
-  }
-
-  private handleDeleteEmployee = (event: Event): void => {
-    const employeeIdToDelete = getCustomEventDetail<string>(event)
-    this.employees = this.employees.filter(
-      (employee) => employee.id !== employeeIdToDelete,
-    )
-    this.updateEmployeeListElement()
-
-    // If the row being deleted is the one currently loaded into the form,
-    // the form would otherwise keep showing data for an employee that no
-    // longer exists — clearing it avoids saving a "resurrected" record.
-    if (this.employeeFormElement.employee?.id === employeeIdToDelete) {
-      this.employeeFormElement.employee = null
-    }
-  }
-
   render(): TemplateResult {
     return html`
       <div class="app-shell-layout">
         <div class="app-shell-banner">
           <h1 class="app-shell-banner-title">Employee Management</h1>
         </div>
-        <slot></slot>
+        <employee-widget></employee-widget>
       </div>
     `
   }
