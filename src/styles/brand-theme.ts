@@ -34,6 +34,14 @@ export const brandTheme = css`
     --brand-color-accent-gradient-start: #7c3aed;
     --brand-color-accent-gradient-end: #db2777;
 
+    /* Dashboard shell chrome (top bar / sidebar) — a distinct navy, not
+       the purple used by widget buttons, matching the reference layout's
+       own visual split between "shell" and "widget content". */
+    --brand-color-shell-navy: #1e2a5e;
+    --brand-color-shell-navy-hover: #29397a;
+    --brand-color-shell-page-background: #f1f5f9;
+    --brand-color-shell-active-background: #eef2ff;
+
     --brand-spacing-extra-small: 6px;
     --brand-spacing-small: 10px;
     --brand-spacing-medium: 16px;

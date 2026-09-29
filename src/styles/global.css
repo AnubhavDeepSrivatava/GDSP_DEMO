@@ -8,14 +8,13 @@ html {
 
 :root {
   color-scheme: light;
-  background-color: #ebe0e1;
+  background-color: #f1f5f9;
 }
 
+/* No more flex-centering: app-shell is now a full dashboard that should
+   span the whole viewport edge-to-edge, not sit as a centered card. */
 body {
   margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-width: 320px;
   min-height: 100%;
   font-synthesis: none;
